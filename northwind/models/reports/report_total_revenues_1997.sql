@@ -1,19 +1,18 @@
--- models/reporting/view_total_revenues_per_customer.sql
+-- models/reporting/report_total_revenues_1997.sql
 
 {{ config(
     schema='gold',
     materialized='table'
 ) }}
 
+with ord as (
+    select order_id 
+    from {{ ref('stg_orders') }}
+    where extract(year from order_date) = 1997
+)
 select 
-    customers.company_name, 
-    sum(order_details.unit_price * order_details.quantity * (1.0 - order_details.discount)) as total
+    sum(order_details.unit_price * order_details.quantity * (1.0 - order_details.discount)) as total_revenues_1997
 from 
-    {{ ref('stg_customers') }} as customers
+    {{ ref('stg_order_details') }} as order_details
 inner join 
-    {{ ref('stg_orders') }} as orders on customers.customer_id = orders.customer_id
-inner join 
-    {{ ref('stg_order_details') }} as order_details on order_details.order_id = orders.order_id
-group by 
-    customers.company_name
-order by 
+    ord on ord.order_id = order_details.order_id
