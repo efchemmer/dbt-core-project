@@ -1,4 +1,10 @@
+
 -- models/view_receitas_acumuladas.sql
+
+{{ config(
+    schema='gold',
+    materialized='table'
+) }}
 
 with receitas_mensais as (
     select
