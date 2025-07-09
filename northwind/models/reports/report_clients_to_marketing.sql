@@ -1,5 +1,5 @@
 -- models/reporting/clients_to_marketing.sql
-
+-- g
 {{ config(
     schema='gold',
     materialized='table'
